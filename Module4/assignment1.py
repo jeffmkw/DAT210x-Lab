@@ -5,9 +5,10 @@ import datetime
 
 from mpl_toolkits.mplot3d import Axes3D
 from plyfile import PlyData, PlyElement
+from sklearn.decomposition import PCA
 
-
-# Every 100 data samples, we save 1. If things run too
+# Every 100 data samples, we save
+# 1. If things run too
 # slow, try increasing this number. If things run too fast,
 # try decreasing it... =)
 reduce_factor = 100
@@ -20,19 +21,20 @@ matplotlib.style.use('ggplot')
 # Load up the scanned armadillo
 plyfile = PlyData.read('Datasets/stanford_armadillo.ply')
 armadillo = pd.DataFrame({
-  'x':plyfile['vertex']['z'][::reduce_factor],
-  'y':plyfile['vertex']['x'][::reduce_factor],
-  'z':plyfile['vertex']['y'][::reduce_factor]
+    'x':plyfile['vertex']['z'][::reduce_factor],
+    'y':plyfile['vertex']['x'][::reduce_factor],
+    'z':plyfile['vertex']['y'][::reduce_factor]
 })
 
 
 def do_PCA(armadillo):
-  #
+  pca = PCA(n_compoitions = 2, svd_solver = 'full')
   # TODO: Write code to import the libraries required for PCA.
   # Then, train your PCA on the armadillo dataframe. Finally,
   # drop one dimension (reduce it down to 2D) and project the
   # armadillo down to the 2D principal component feature space.
-  #
+  fullproject = pca.transform(plyfile)
+
   # NOTE: Be sure to RETURN your projected armadillo! 
   # (This projection is actually stored in a NumPy NDArray and
   # not a Pandas dataframe, which is something Pandas does for
