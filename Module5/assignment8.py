@@ -15,9 +15,9 @@ def drawLine(model, X_test, y_test, title):
   ax.scatter(X_test, y_test, c='g', marker='o')
   ax.plot(X_test, model.predict(X_test), color='orange', linewidth=1, alpha=0.7)
 
-  print "Est 2014 " + title + " Life Expectancy: ", model.predict([[2014]])[0]
-  print "Est 2030 " + title + " Life Expectancy: ", model.predict([[2030]])[0]
-  print "Est 2045 " + title + " Life Expectancy: ", model.predict([[2045]])[0]
+  print ("Est 2014 " + title + " Life Expectancy: ", model.predict([[2014]])[0])
+  print ("Est 2030 " + title + " Life Expectancy: ", model.predict([[2030]])[0])
+  print ("Est 2045 " + title + " Life Expectancy: ", model.predict([[2045]])[0])
 
   score = model.score(X_test, y_test)
   title += " R2: " + str(score)
@@ -34,16 +34,18 @@ def drawLine(model, X_test, y_test, title):
 # spread sheet application
 #
 # .. your code here ..
-
-
+df = pd.read_csv('Datasets/life_expectancy.csv', sep = '\t')
+print(df.dtypes)
+print(df.head(5))
+print(df.shape)
 #
 # TODO: Create your linear regression model here and store it in a
 # variable called 'model'. Don't actually train or do anything else
 # with it yet:
 #
 # .. your code here ..
-
-
+from sklearn import linear_model
+model =linear_model.LinearRegression(n_jobs=6)
 
 #
 # TODO: Slice out your data manually (e.g. don't use train_test_split,
@@ -55,7 +57,12 @@ def drawLine(model, X_test, y_test, title):
 #
 # .. your code here ..
 
-
+#print(df.Year)
+x_train = df.Year[df.Year< 1986]
+x_train = x_train.to_frame()
+y_train = df.WhiteMale[df.Year< 1986]
+print('shape: ', x_train.shape, y_train.shape)
+print('type:', type(x_train), type(y_train))
 
 #
 # TODO: Train your model then pass it into drawLine with your training
@@ -66,6 +73,9 @@ def drawLine(model, X_test, y_test, title):
 # 2030 and 2045 extrapolation.
 #
 # .. your code here ..
+model.fit(x_train,y_train)
+
+drawLine(model, x_train, y_train, "WhiteMale")
 
 
 #
@@ -73,7 +83,7 @@ def drawLine(model, X_test, y_test, title):
 # loaded dataset
 #
 # .. your code here ..
-
+print('actually value: ', df.WhiteMale[df.Year == 2014])
 
 
 # 
@@ -83,7 +93,16 @@ def drawLine(model, X_test, y_test, title):
 # BlackFemale life expectancy
 #
 # .. your code here ..
+x_train = df.Year[df.Year< 1986]
+x_train = x_train.to_frame()
+y_train = df.BlackFemale[df.Year< 1986]
+print('shape: ', x_train.shape, y_train.shape)
+print('type:', type(x_train), type(y_train))
 
+model.fit(x_train,y_train)
+
+drawLine(model, x_train, y_train, "BlackFemale")
+print('actually value: ', df.BlackFemale[df.Year == 2014])
 
 
 #
@@ -93,7 +112,12 @@ def drawLine(model, X_test, y_test, title):
 # the course
 #
 # .. your code here ..
-
+print(df.corr())
+plt.imshow(df.corr(), cmap=plt.cm.Blues, interpolation='nearest')
+plt.colorbar()
+tick_marks = [i for i in range(len(df.columns))]
+plt.xticks(tick_marks, df.columns, rotation='vertical')
+plt.yticks(tick_marks, df.columns)
 plt.show()
 
 

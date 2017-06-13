@@ -48,7 +48,7 @@ Provided_Portion = 0.25
 # TODO: Create a regular ol' Python List called `zero`
 #
 # .. your code here ..
-
+zero = []
 
 
 #

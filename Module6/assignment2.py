@@ -1,5 +1,7 @@
 import pandas as pd
-
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore', category=DeprecationWarning)
 # The Dataset comes from:
 # https://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits
 
@@ -31,7 +33,7 @@ def load(path_test, path_train):
 
 def peekData(X_train):
   # The 'targets' or labels are stored in y. The 'samples' or data is stored in X
-  print "Peeking your data..."
+  print ("Peeking your data...")
   fig = plt.figure()
 
   cnt = 0
@@ -81,7 +83,7 @@ def drawPredictions(X_train, X_test, y_train, y_test):
 
 #
 # TODO: Pass in the file paths to the .tes and the .tra files
-X_train, X_test, y_train, y_test = load('', '')
+X_train, X_test, y_train, y_test = load('Datasets/optdigits.tes', 'Datasets/optdigits.tra')
 
 import matplotlib.pyplot as plt
 from sklearn import svm
@@ -90,25 +92,27 @@ from sklearn import svm
 # Get to know your data. It seems its already well organized in
 # [n_samples, n_features] form. Our dataset looks like (4389, 784).
 # Also your labels are already shaped as [n_samples].
-peekData(X_train)
+#peekData(X_train)
 
 
 #
 # TODO: Create an SVC classifier. Leave C=1, but set gamma to 0.001
 # and set the kernel to linear. Then train the model on the training
 # data / labels:
-print "Training SVC Classifier..."
+print ("Training SVC Classifier...")
 #
 # .. your code here ..
-
-
+from sklearn.svm import SVC
+model = SVC(C=1, gamma=0.001, kernel='linear')
+model.fit(X_train, y_train)
 
 
 # TODO: Calculate the score of your SVC against the testing data
-print "Scoring SVC Classifier..."
+print ("Scoring SVC Classifier...")
 #
 # .. your code here ..
-print "Score:\n", score
+score = model.score(X_test, y_test)
+print ("Score:\n", score)
 
 
 # Visual Confirmation of accuracy
@@ -120,8 +124,9 @@ drawPredictions(X_train, X_test, y_train, y_test)
 # By TRUE value, we mean, the actual provided label for that sample
 #
 # .. your code here ..
-print "1000th test label: ", true_1000th_test_value)
-
+true_1000th_test_value = y_test[999]
+print ("1000th test label: ", true_1000th_test_value)
+#label is 1
 
 #
 # TODO: Predict the value of the 1000th digit in the test set.
@@ -130,7 +135,8 @@ print "1000th test label: ", true_1000th_test_value)
 # notes from the previous module's labs.
 #
 # .. your code here ..
-print "1000th test prediction: ", guess_1000th_test_value
+guess_1000th_test_value = model.predict(X_test.iloc[999])
+print("1000th test prediction: ", guess_1000th_test_value)
 
 
 #
@@ -138,7 +144,7 @@ print "1000th test prediction: ", guess_1000th_test_value
 # visually check if it was a hard image, or an easy image
 #
 # .. your code here ..
-
+#nope
 
 #
 # TODO: Were you able to beat the USPS advertised accuracy score
@@ -146,7 +152,11 @@ print "1000th test prediction: ", guess_1000th_test_value
 # weren't able to get that high of an accuracy score, go back
 # and change your SVC's kernel to 'poly' and re-run your lab
 # again.
-
+print('trail 2')
+model = SVC(C=1, gamma=0.001, kernel='poly')
+model.fit(X_train, y_train)
+score = model.score(X_test, y_test)
+print ("poly Score:\n", score)
 
 
 #
@@ -155,16 +165,11 @@ print "1000th test prediction: ", guess_1000th_test_value
 # weren't able to get that high of an accuracy score, go back
 # and change your SVC's kernel to 'rbf' and re-run your lab
 # again.
-
-
-
-#
-# TODO: Were you able to beat the USPS advertised accuracy score
-# of 98%? If so, STOP and answer the lab questions. But if you
-# weren't able to get that high of an accuracy score, go back
-# and tinker with your gamma value and C value until you're able
-# to beat the USPS. Don't stop tinkering until you do. =).
-
+print('trail 2')
+model = SVC(C=1, gamma=0.001, kernel='rbf')
+model.fit(X_train, y_train)
+score = model.score(X_test, y_test)
+print ("rbf Score:\n", score)
 
 #################################################
 
@@ -202,4 +207,4 @@ print "1000th test prediction: ", guess_1000th_test_value
 # TODO: Lastly, change your kernel back to linear and run your
 # assignment one last time. What's the accuracy score this time?
 # Surprised?
-
+print('Olalalalaaaaaaaaaaaaaaaaa!')

@@ -18,8 +18,8 @@ def drawLine(model, X_test, y_test, title, R2):
 
   title += " R2: " + str(R2)
   ax.set_title(title)
-  print title
-  print "Intercept(s): ", model.intercept_
+  print (title)
+  print ("Intercept(s): ", model.intercept_)
 
   plt.show()
 
@@ -57,8 +57,8 @@ def drawPlane(model, X_test, y_test, title, R2):
   
   title += " R2: " + str(R2)
   ax.set_title(title)
-  print title
-  print "Intercept(s): ", model.intercept_
+  print (title)
+  print ("Intercept(s): ", model.intercept_)
   
   plt.show()
   
@@ -83,7 +83,8 @@ def drawPlane(model, X_test, y_test, title, R2):
 # called X:
 #
 # .. your code here ..
-
+X = pd.read_csv('Datasets/college.csv', index_col = 0)
+print(X.columns)
 
 #
 # INFO: This line isn't necessary for your purposes; but we'd just
@@ -102,7 +103,8 @@ X.Private = X.Private.map({'Yes':1, 'No':0})
 # with it yet:
 #
 # .. your code here ..
-
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
 
 
 
@@ -120,14 +122,23 @@ X.Private = X.Private.map({'Yes':1, 'No':0})
 #
 # .. your code here ..
 
+x = X[['Room.Board']]
+y = X['Accept']
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.3, random_state=7)
+
 #
 # TODO: Fit and score your model appropriately. Store the score in the
 # score variable.
 #
 # .. your code here ..
+model.fit(x_train, y_train)
+score = model.score(x_test,y_test)
+print('Room.Board score of the model is: ', score)
+
 
 # INFO: We'll take it from here, buddy:
-drawLine(model, X_test, y_test, "Accept(Room&Board)", score)
+drawLine(model, x_test, y_test, "Accept(Room&Board)", score)
 
 
 
@@ -138,9 +149,16 @@ drawLine(model, X_test, y_test, "Accept(Room&Board)", score)
 # per college.
 #
 # .. your code here ..
-drawLine(model, X_test, y_test, "Accept(Enroll)", score)
+x = X['Enroll'].to_frame()
+y = X['Accept']
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.3, random_state=7)
 
+model.fit(x_train, y_train)
+score = model.score(x_test,y_test)
+print('Enroll score of the model is: ', score)
 
+drawLine(model, x_test, y_test, "Accept(Room&Enroll)", score)
 
 # 
 # TODO: Duplicate the process above; this time, model the number of
@@ -148,7 +166,16 @@ drawLine(model, X_test, y_test, "Accept(Enroll)", score)
 # students per college.
 #
 # .. your code here ..
-drawLine(model, X_test, y_test, "Accept(F.Undergrad)", score)
+x = X['F.Undergrad'].to_frame()
+y = X['Accept']
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.3, random_state=7)
+
+model.fit(x_train, y_train)
+score = model.score(x_test,y_test)
+print('F.Undergrad score of the model is: ', score)
+
+drawLine(model, x_test, y_test, "Accept(F.Undergrad)", score)
 
 
 #
@@ -164,7 +191,18 @@ drawLine(model, X_test, y_test, "Accept(F.Undergrad)", score)
 # inputs. Your training labels will remain a single slice.
 #
 # .. your code here ..
-drawPlane(model, X_test, y_test, "Accept(Room&Board,Enroll)", score)
+
+x = X[['Room.Board', 'Enroll']]
+y = X['Accept']
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.3, random_state=7)
+
+model.fit(x_train, y_train)
+score = model.score(x_test,y_test)
+print('Room.Board and Enroll score of the model is: ', score)
+
+
+drawPlane(model, x_test, y_test, "Accept(Room&Board,Enroll)", score)
 
 
 #
