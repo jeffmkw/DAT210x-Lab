@@ -9,19 +9,28 @@ import pandas as pd
 # Verify you did it properly.
 # Indices shouldn't be doubled.
 # Header information is on the dataset's website at the UCI ML Repo
-# Check NA Encoding
+# Check NA Encoding # na_values = '!"
 #
 # .. your code here ..
 
 # INFO: An easy way to show which rows have nans in them
 #print X[pd.isnull(X).any(axis=1)]
-
+X = pd.read_csv('Datasets/agaricus-lepiota.data',
+                names = ['classes', 'cap-shape', 'cap-surface', 'cap-color', 'bruises?', 'odor', 'gill-attachment', 'gill-spacing', 'gill-size', 'gill-color', 'stalk-shape', 'stalk-root', 'stalk-surface-above-ring', 'stalk-surface-below-ring', 'stalk-color-above-ring', 'stalk-color-below-ring', 'veil-type', 'veil-color', 'ring-number', 'ring-type', 'spore-print-color', 'population', 'habitat'],
+                na_values='?')
 
 # 
 # TODO: Go ahead and drop any row with a nan
 #
 # .. your code here ..
-print X.shape
+
+#print(X.shape) # (8123, 22)
+#print(X.dtypes)
+#print(X[pd.isnull(X).any(axis=1)])# there is a hell lot of missing value
+
+print(X.columns)
+X.dropna(axis=0, how = 'any', inplace=True)
+#print(X[pd.isnull(X).any(axis=1)]) # awesome. no missing value any more
 
 
 #
@@ -30,13 +39,19 @@ print X.shape
 # you in Module 5 -- canadian:0, kama:1, and rosa:2
 #
 # .. your code here ..
+y = X.classes
+X.drop('classes', axis = 1, inplace=True)
 
+#print(set(y)) # {'p', 'e'}
+y = y.map({'p':1, 'e': 0})
+#print(y)
 
 #
 # TODO: Encode the entire dataset using dummies
 #
 # .. your code here ..
-
+X = pd.get_dummies(X)
+#print(X)
 
 # 
 # TODO: Split your data into test / train sets
@@ -44,21 +59,25 @@ print X.shape
 # Use variable names: X_train, X_test, y_train, y_test
 #
 # .. your code here ..
-
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=7)
 
 
 #
 # TODO: Create an DT classifier. No need to set any parameters
 #
 # .. your code here ..
-
+from sklearn import tree
+model = tree.DecisionTreeClassifier()
  
 #
 # TODO: train the classifier on the training data / labels:
 # TODO: score the classifier on the testing data / labels:
 #
 # .. your code here ..
-print "High-Dimensionality Score: ", round((score*100), 3)
+model.fit(X_train, y_train)
+score = model.score(X_test, y_test)
+print("High-Dimensionality Score: ", round((score*100), 3))
 
 
 #
@@ -70,5 +89,6 @@ print "High-Dimensionality Score: ", round((score*100), 3)
 # tree directly from the exported tree.dot file without having to issue a call.
 #
 # .. your code here ..
+tree.export_graphviz(model.tree_, out_file = 'tree.dot', feature_names = X.columns)
 
-
+#I copied the result to http://webgraphviz.com/ to visulize it.
